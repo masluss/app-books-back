@@ -1,0 +1,52 @@
+version: "3.8"
+
+name: app-books-back
+
+services:
+  mongo:
+    image: mongo:6
+    container_name: mongo
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USER}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASS}
+    ports:
+      - "27017:27017" # opcional: expone a host por si quieren conectarse con Compass
+    volumes:
+      - mongo_data:/data/db
+      - ./ops/mongo-init:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.runCommand({ ping: 1 })", "mongodb://${MONGO_USER}:${MONGO_PASS}@localhost:27017/admin"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: ${BUILD_TARGET:-dev}   # dev (hot reload) | prod (build + run)
+    container_name: app-books-back
+    env_file:
+      - ./.env
+    environment:
+      MONGO_URI: ${MONGO_URI}        # importante: host "mongo"
+      PORT: ${PORT}
+      CORS_ORIGIN: ${CORS_ORIGIN}
+      TRANSPORTER: ${TRANSPORTER}
+      NODE_ENV: ${NODE_ENV}
+    volumes:
+      - .:/usr/src/app               # hot reload en dev
+    ports:
+      - "3001:3001"
+    depends_on:
+      mongo:
+        condition: service_healthy
+    command: >
+      sh -c "if [ \"$NODE_ENV\" = \"production\" ];
+             then node dist/index.js;
+             else npm run dev;
+             fi"
+
+volumes:
+  mongo_data:
