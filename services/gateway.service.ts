@@ -45,7 +45,7 @@ export default class GatewayService extends Service {
 
             aliases: {
               "GET books/search": "books.search",
-              "GET books/library/front-cover/:id": "covers.stream",
+              "GET books/library/front-cover/:cover_i": "covers.stream",
               "GET books/last-search": "searches.last",
               "POST books/my-library": "library.addWithCover",
               "GET books/my-library": "library.list",
