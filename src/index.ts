@@ -2,10 +2,10 @@ import "dotenv/config";
 import { ServiceBroker } from "moleculer";
 import brokerConfig from "./moleculer.config";
 
-import GatewayService from "../services/gateway.service";
-import BooksService from "../services/books.service";
-import LibraryService from "../services/library.service";
-import CoversService from "../services/covers.service";
+import GatewayService from "./services/gateway.service";
+import BooksService from "./services/books.service";
+import LibraryService from "./services/library.service";
+import CoversService from "./services/covers.service";
 
 async function main() {
   const broker = new ServiceBroker(brokerConfig);
