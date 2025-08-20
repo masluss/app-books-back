@@ -1,29 +1,27 @@
 export type OpenLibraryDoc = {
-  key: string;                 // e.g. "/works/OL12345W"
+  key: string;
   title: string;
   author_name?: string[];
   first_publish_year?: number;
-  cover_i?: number;            // id de cover en OL (opcional)
+  cover_i?: number;
 };
 
 export type SearchBookResult = {
-  openLibraryKey: string;      // "/works/OL12345W"
+  openLibraryKey: string;
   title: string;
   authors: string[];
   firstPublishYear?: number;
-  // URL final de portada para frontend (si está en la biblioteca -> URL interna)
   coverUrl?: string;
-  // Bandera para UI
   inMyLibrary: boolean;
 };
 
 export type LibraryBook = {
   _id?: any;
-  openLibraryKey: string;      // unique
+  openLibraryKey: string;
   title: string;
   authors: string[];
   firstPublishYear?: number;
-  cover?: { gridFsId: string; contentType?: string; };
+  cover_i?: number;
   createdAt?: Date;
   updatedAt?: Date;
 };
