@@ -36,7 +36,7 @@ export default class BooksService extends Service {
 			.map((d: any) => normKey(d.key))
 			.filter(Boolean);
 
-		let map: Record<string, { exists: boolean; coverGridId?: string }> = {};
+		let map: Record<string, { exists: boolean; cover_i?: number }> = {};
 		if (keys.length) {
 			try {
 				map = (await ctx.call(
@@ -60,10 +60,13 @@ export default class BooksService extends Service {
 			const inLib = !!found?.exists;
 
 			let coverUrl: string | undefined;
-			if (inLib && typeof d.cover_i === "number") {
-				coverUrl = `/api/books/library/front-cover/${d.cover_i}`;
-			} else if (typeof d.cover_i === "number") {
-				coverUrl = `https://covers.openlibrary.org/b/id/${d.cover_i}-M.jpg`;
+			const coverId = (inLib ? found?.cover_i : d.cover_i) as
+				| number
+				| undefined;
+			if (typeof coverId === "number") {
+				coverUrl = inLib
+					? `/api/books/library/front-cover/${coverId}`
+					: ``;
 			}
 
 			return clean({
