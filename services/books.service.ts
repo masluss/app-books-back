@@ -39,11 +39,11 @@ export default class BooksService extends Service {
 		let map: Record<string, { exists: boolean; coverGridId?: string }> = {};
 		if (keys.length) {
 			try {
-				const map = (await ctx.call(
+				map = (await ctx.call(
 					"library.bulkLookup",
 					{ keys },
-					{ timeout: 1500 },
-				)) as Record<string, { exists: boolean; coverGridId?: string }>;
+					{ meta: { userId: ctx.meta.userId }, timeout: 1500 },
+				)) as Record<string, { exists: boolean; cover_i?: number }>;
 			} catch {
 				map = {};
 			}
@@ -56,7 +56,8 @@ export default class BooksService extends Service {
 
 		const docsMapped = docs.map((d: any) => {
 			const keyNorm = normKey(d.key);
-			const inLib = keyNorm ? map[keyNorm]?.exists || false : false;
+			const found = keyNorm ? map[keyNorm] : undefined;
+			const inLib = !!found?.exists;
 
 			let coverUrl: string | undefined;
 			if (inLib && typeof d.cover_i === "number") {
@@ -90,8 +91,7 @@ export default class BooksService extends Service {
 				{ q },
 				{ meta: { userId: ctx.meta.userId } },
 			);
-		} catch {
-		}
+		} catch {}
 
 		return clean({
 			start: data?.start ?? 0,
