@@ -71,7 +71,6 @@ export default class LibraryService extends Service {
 					handler: this.addHandler,
 				},
 
-				// ✅ Acción principal: guarda el libro y si no mandan coverBase64, la descarga desde OpenLibrary
 				addWithCover: {
 					params: {
 						openLibraryKey: "string",
@@ -327,22 +326,18 @@ export default class LibraryService extends Service {
 					});
 				},
 
-				// Resuelve la URL de la portada usando los datos disponibles
 				async resolveCoverUrl(
 					this: any,
 					openLibraryKey?: string,
 					cover_i?: number,
 					cover_edition_key?: string,
 				): Promise<string | undefined> {
-					// Prioridad 1: cover_i directo
 					if (typeof cover_i === "number") {
 						return `https://covers.openlibrary.org/b/id/${cover_i}-L.jpg`;
 					}
-					// Prioridad 2: cover_edition_key (OLID)
 					if (cover_edition_key) {
 						return `https://covers.openlibrary.org/b/olid/${cover_edition_key}-L.jpg`;
 					}
-					// Prioridad 3: consultar el work para sacar "covers"
 					if (openLibraryKey) {
 						try {
 							const workUrl = `https://openlibrary.org${openLibraryKey}.json`;

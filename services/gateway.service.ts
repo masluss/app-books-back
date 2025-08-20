@@ -31,7 +31,6 @@ export default class GatewayService extends Service {
               req: IncomingMessage,
               _res: ServerResponse
             ) => {
-              // evitar warning de no usado si tienes noUnusedParameters
               void _route; void _res;
 
               const headers = (req.headers || {}) as Record<string, string>;

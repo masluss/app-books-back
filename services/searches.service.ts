@@ -55,7 +55,6 @@ export default class SearchesService extends Service {
 
       methods: {
         async afterConnected(this: any) {
-          // Índice para consultas por usuario y orden cronológico
           await this.adapter.collection.createIndex({ userId: 1, createdAt: -1 });
         }
       }
