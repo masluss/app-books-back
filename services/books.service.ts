@@ -66,7 +66,7 @@ export default class BooksService extends Service {
 			if (typeof coverId === "number") {
 				coverUrl = inLib
 					? `/api/books/library/front-cover/${coverId}`
-					: ``;
+					: `https://covers.openlibrary.org/b/id/${coverId}-M.jpg`;
 			}
 
 			return clean({
